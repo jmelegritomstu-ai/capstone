@@ -32,17 +32,17 @@ if (isset($_GET['emp_id']) && $_GET['emp_id'] !== '') {
   }
 }
 if (isset($_GET['from']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['from'])) {
-  $where .= ($where? ' AND ':' WHERE ') . 'date_issued >= ?';
+  $where .= ($where? ' AND ':' WHERE ') . "DATE(created_at) >= ?";
   $params[] = $_GET['from'];
   $types .= 's';
 }
 if (isset($_GET['to']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['to'])) {
-  $where .= ($where? ' AND ':' WHERE ') . 'date_issued <= ?';
+  $where .= ($where? ' AND ':' WHERE ') . "DATE(created_at) <= ?";
   $params[] = $_GET['to'];
   $types .= 's';
 }
 
-$sql = "SELECT id, emp_id, employee_name, notice_type, category, description, issued_by, date_issued, created_at FROM notices" . $where . " ORDER BY date_issued DESC, id DESC LIMIT 500";
+$sql = "SELECT id, emp_id, employee_name, notice_type, category, description, issued_by, created_at AS date_issued FROM notices" . $where . " ORDER BY created_at DESC, id DESC LIMIT 500";
 $stmt = $conn->prepare($sql);
 if (!$stmt) { echo json_encode(['success'=>false,'message'=>'Prepare failed: '.$conn->error]); exit; }
 if ($params) { $stmt->bind_param($types, ...$params); }
