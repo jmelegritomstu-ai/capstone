@@ -306,4 +306,5 @@ $avatarPath = !empty($me['profile_img']) ? ('../uploads/' . basename($me['profil
     });
   </script>
 </body>
+
 </html>
